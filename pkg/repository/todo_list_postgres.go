@@ -91,8 +91,8 @@ func (r *TodoListPostgres) Update(userId, listId int, input todo.UpdateListInput
 
 	args = append(args, listId, userId)
 
-	logrus.DebugFn("updateQuery: %s", query)
-	logrus.DebugFn("args: %s", args)
+	logrus.Debugf("updateQuery: %s", query)
+	logrus.Debugf("args: %s", args)
 
 	_, err := r.db.Exec(query, args...)
 	return err
