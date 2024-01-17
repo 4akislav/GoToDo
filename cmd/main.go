@@ -13,6 +13,7 @@ import (
 	"github.com/4akislav/todo-app/pkg/service"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -46,8 +47,12 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	srv := new(todo.Server)
+	c := cors.Default()
+
+	handlerWithCors := c.Handler(handlers.InitRoutes())
+
 	go func() {
-		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+		if err := srv.Run(viper.GetString("port"), handlerWithCors); err != nil {
 			logrus.Fatalf("error occured while running http server: %s", err.Error())
 		}
 	}()
